@@ -49,22 +49,23 @@ const CATEGORIES = [
   {id:"beauty",label:"Ομορφιά & Tips",icon:"💅",color:"#F9A8D4"},
 ];
 
-const NEWS_API_KEY = "1f2b50daa8e646db8fac6050c325ef63";
-
-const NEWS_QUERIES = {
-  breaking:  "Ελλάδα έκτακτο",
-  trending:  "Ελλάδα trending",
-  viral:     "viral Ελλάδα",
-  lifestyle: "lifestyle Ελλάδα",
-  sports:    "αθλητικά Ελλάδα",
-  world:     "διεθνή νέα",
-  nightlife: "nightlife Αθήνα",
-  tourism:   "τουρισμός Ελλάδα",
-  music:     "μουσική Ελλάδα",
-  health:    "υγεία fitness",
-  auto:      "αυτοκίνητο Ελλάδα",
-  beauty:    "ομορφιά beauty",
-};
+const MOCK_ARTICLES = [
+  {id:1,title:"Σεισμός 5.8 Ρίχτερ στην Αττική — Αισθητός σε όλη την Ελλάδα",summary:"Ισχυρός σεισμός έπληξε την Αττική. Δεν αναφέρθηκαν θύματα ή ζημιές.",time:"5 λεπτά",category:"breaking",hot:98,source:"protothema.gr",url:"https://www.protothema.gr"},
+  {id:2,title:"Καύσωνας: 44°C αύριο — Έκτακτο δελτίο ΕΜΥ για όλη την Ελλάδα",summary:"Η ΕΜΥ εξέδωσε έκτακτο δελτίο επικίνδυνων καιρικών φαινομένων. Αποφύγετε έκθεση 11:00–17:00.",time:"12 λεπτά",category:"breaking",hot:95,source:"kathimerini.gr",url:"https://www.kathimerini.gr"},
+  {id:3,title:"Έλληνας creator έσπασε ρεκόρ: 80 εκατ. views σε 48 ώρες στο TikTok",summary:"Βίντεο Έλληνα δημιουργού έγινε viral παγκοσμίως και τράβηξε διεθνή προσοχή.",time:"25 λεπτά",category:"viral",hot:99,source:"in.gr",url:"https://www.in.gr"},
+  {id:4,title:"Ολυμπιακός: Επίσημη ανακοίνωση για νέο προπονητή — Ισπανός τεχνικός",summary:"Η ΠΑΕ Ολυμπιακός ανακοίνωσε την απόκτηση έμπειρου Ισπανού τεχνικού με στόχο την Ευρώπη.",time:"40 λεπτά",category:"sports",hot:87,source:"gazzetta.gr",url:"https://www.gazzetta.gr"},
+  {id:5,title:"Taylor Swift: Νέο album «The Tortured Poets Department II» — Ρεκόρ pre-orders",summary:"18 νέα tracks, κυκλοφορία Σεπτέμβριο. Έσπασε κάθε ρεκόρ στις προ-παραγγελίες παγκοσμίως.",time:"1 ώρα",category:"trending",hot:93,source:"pes.gr",url:"https://www.pes.gr"},
+  {id:6,title:"Μύκονος: Νέοι κανόνες για τουρίστες — Τι αλλάζει φέτος το καλοκαίρι",summary:"Περιορισμοί επισκεπτών, νέες τιμές και κανόνες — τι να ξέρεις πριν ταξιδέψεις στο νησί.",time:"1 ώρα",category:"tourism",hot:82,source:"newsbeast.gr",url:"https://www.newsbeast.gr"},
+  {id:7,title:"Αθήνα Nightlife 2026: Τα 10 καλύτερα clubs του καλοκαιριού",summary:"Ο πλήρης οδηγός για τα hot spots της αθηναϊκής νύχτας — Γκάζι, Ριβιέρα και νέες αφίξεις.",time:"2 ώρες",category:"nightlife",hot:85,source:"newsbeast.gr",url:"https://www.newsbeast.gr"},
+  {id:8,title:"Spotify αλλάζει πληρωμές καλλιτεχνών — Τι σημαίνει για την ελληνική δισκογραφία",summary:"Νέο μοντέλο αποζημίωσης που επηρεάζει εκατομμύρια ανεξάρτητους καλλιτέχνες παγκοσμίως.",time:"3 ώρες",category:"music",hot:75,source:"rocking.gr",url:"https://www.rocking.gr"},
+  {id:9,title:"G7: Νέες κυρώσεις κατά Ρωσίας — Αντιδράσεις Μόσχας",summary:"Νέο πακέτο κυρώσεων από τους G7 εστιάζοντας στον ενεργειακό τομέα και τις εξαγωγές.",time:"3 ώρες",category:"world",hot:71,source:"kathimerini.gr",url:"https://www.kathimerini.gr"},
+  {id:10,title:"Το viral πρωινό που όλοι τρώνε φέτος — Η νέα τάση του ελληνικού καλοκαιριού",summary:"Τάση που σαρώνει το TikTok και έχει γίνει η νέα συνήθεια του ελληνικού καλοκαιριού.",time:"4 ώρες",category:"lifestyle",hot:88,source:"in2life.gr",url:"https://www.in2life.gr"},
+  {id:11,title:"BMW M5 vs Mercedes AMG E63: Η μεγάλη δοκιμή του 2026 στην πίστα",summary:"Συγκριτική δοκιμή των δύο κορυφαίων sport sedan — ποιο κερδίζει στην πίστα και στον δρόμο;",time:"5 ώρες",category:"auto",hot:77,source:"newsauto.gr",url:"https://www.newsauto.gr"},
+  {id:12,title:"10 beauty hacks που κάνουν viral τις Ελληνίδες στο TikTok φέτος",summary:"Από SPF routines ως μεσογειακά συστατικά — τα μυστικά ομορφιάς που όλες μοιράζονται.",time:"6 ώρες",category:"beauty",hot:83,source:"queen.gr",url:"https://www.queen.gr"},
+  {id:13,title:"5 τροφές που καίνε λίπος πιο αποτελεσματικά από τη γυμναστική",summary:"Νέα έρευνα αποκαλύπτει ποιες τροφές επιταχύνουν τον μεταβολισμό και βοηθούν στην απώλεια βάρους.",time:"7 ώρες",category:"health",hot:86,source:"vita.gr",url:"https://www.vita.gr"},
+  {id:14,title:"Grammy 2027: Beyoncé vs Kendrick — 9 υποψηφιότητες ο καθένας",summary:"Η Recording Academy ανακοίνωσε τις υποψηφιότητες. Επική σύγκρουση για το βραβείο χρονιάς.",time:"8 ώρες",category:"trending",hot:90,source:"pes.gr",url:"https://www.pes.gr"},
+  {id:15,title:"Ρεκόρ τουριστών στην Ελλάδα — 35 εκατ. αφίξεις το 2026",summary:"Η Ελλάδα έχει ήδη σπάσει το ρεκόρ αφίξεων του 2025 με μήνες μπροστά.",time:"9 ώρες",category:"tourism",hot:78,source:"newsbeast.gr",url:"https://www.newsbeast.gr"},
+];
 
 const PLATFORMS = [
   {id:"instagram",label:"Instagram",icon:"📸",tone:"visual, engaging, με emojis, max 150 λέξεις, τελειώνει με 5 hashtags"},
@@ -95,24 +96,10 @@ function extractDomain(url){
 }
 
 async function fetchRSS(category){
-  const query=NEWS_QUERIES[category];
-  if(!query)return[];
-  try{
-    const url=`https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&language=el&sortBy=publishedAt&pageSize=20&apiKey=${NEWS_API_KEY}`;
-    const res=await fetch(url);
-    const data=await res.json();
-    if(!data.articles)return[];
-    return data.articles.map((item,i)=>({
-      id:`news-${category}-${i}-${Date.now()}`,
-      title:item.title?.replace(/\s*-\s*[^-]+$/,"")||"",
-      summary:item.description?.slice(0,160)||"",
-      time:timeAgo(new Date(item.publishedAt||Date.now())),
-      category,
-      hot:Math.floor(70+Math.random()*29),
-      source:item.source?.name||extractDomain(item.url||""),
-      url:item.url||"#",
-    }));
-  }catch{return[];}
+  // Επιστρέφει mock ειδήσεις φιλτραρισμένες ανά κατηγορία
+  await new Promise(r=>setTimeout(r,500)); // μικρή καθυστέρηση για ρεαλισμό
+  if(category==="all") return MOCK_ARTICLES;
+  return MOCK_ARTICLES.filter(a=>a.category===category);
 }
 
 async function generateCaption(item,platform){
