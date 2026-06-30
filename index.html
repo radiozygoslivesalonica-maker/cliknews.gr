@@ -49,19 +49,21 @@ const CATEGORIES = [
   {id:"beauty",label:"Ομορφιά & Tips",icon:"💅",color:"#F9A8D4"},
 ];
 
-const RSS_FEEDS = {
-  breaking:`https://news.google.com/rss/search?q=site:protothema.gr+OR+site:newsit.gr+OR+site:kathimerini.gr&hl=el&gl=GR&ceid=GR:el`,
-  trending:`https://news.google.com/rss/search?q=site:protothema.gr+OR+site:in.gr+OR+site:iefimerida.gr&hl=el&gl=GR&ceid=GR:el`,
-  viral:`https://news.google.com/rss/search?q=site:newsit.gr+OR+site:queen.gr+viral&hl=el&gl=GR&ceid=GR:el`,
-  lifestyle:`https://news.google.com/rss/search?q=site:queen.gr+OR+site:vogue.gr+OR+site:elle.gr&hl=el&gl=GR&ceid=GR:el`,
-  sports:`https://news.google.com/rss/search?q=site:sport24.gr+OR+site:gazzetta.gr+OR+site:sdna.gr&hl=el&gl=GR&ceid=GR:el`,
-  world:`https://news.google.com/rss/search?q=site:kathimerini.gr+OR+site:tovima.gr+διεθνή&hl=el&gl=GR&ceid=GR:el`,
-  nightlife:`https://news.google.com/rss/search?q=site:athensinsider.com+OR+nightlife+Greece&hl=en&gl=GR&ceid=GR:en`,
-  tourism:`https://news.google.com/rss/search?q=site:visitgreece.gr+OR+site:greece-is.com+τουρισμός&hl=el&gl=GR&ceid=GR:el`,
-  music:`https://news.google.com/rss/search?q=site:rocking.gr+OR+site:avopolis.gr+μουσική&hl=el&gl=GR&ceid=GR:el`,
-  health:`https://news.google.com/rss/search?q=site:vita.gr+OR+site:iatronet.gr+υγεία&hl=el&gl=GR&ceid=GR:el`,
-  auto:`https://news.google.com/rss/search?q=site:newsauto.gr+OR+site:gocar.gr+OR+site:autotriti.gr&hl=el&gl=GR&ceid=GR:el`,
-  beauty:`https://news.google.com/rss/search?q=site:queen.gr+OR+site:vogue.gr+ομορφιά&hl=el&gl=GR&ceid=GR:el`,
+const NEWS_API_KEY = "1f2b50daa8e646db8fac6050c325ef63";
+
+const NEWS_QUERIES = {
+  breaking:  "Ελλάδα έκτακτο",
+  trending:  "Ελλάδα trending",
+  viral:     "viral Ελλάδα",
+  lifestyle: "lifestyle Ελλάδα",
+  sports:    "αθλητικά Ελλάδα",
+  world:     "διεθνή νέα",
+  nightlife: "nightlife Αθήνα",
+  tourism:   "τουρισμός Ελλάδα",
+  music:     "μουσική Ελλάδα",
+  health:    "υγεία fitness",
+  auto:      "αυτοκίνητο Ελλάδα",
+  beauty:    "ομορφιά beauty",
 };
 
 const PLATFORMS = [
@@ -93,22 +95,22 @@ function extractDomain(url){
 }
 
 async function fetchRSS(category){
-  const feed=RSS_FEEDS[category];
-  if(!feed)return[];
+  const query=NEWS_QUERIES[category];
+  if(!query)return[];
   try{
-    const url=`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feed)}&count=20`;
+    const url=`https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&language=el&sortBy=publishedAt&pageSize=20&apiKey=${NEWS_API_KEY}`;
     const res=await fetch(url);
     const data=await res.json();
-    if(!data.items)return[];
-    return data.items.map((item,i)=>({
-      id:`rss-${category}-${i}-${Date.now()}`,
+    if(!data.articles)return[];
+    return data.articles.map((item,i)=>({
+      id:`news-${category}-${i}-${Date.now()}`,
       title:item.title?.replace(/\s*-\s*[^-]+$/,"")||"",
-      summary:item.description?.replace(/<[^>]+>/g,"").slice(0,160)||"",
-      time:timeAgo(new Date(item.pubDate)),
+      summary:item.description?.slice(0,160)||"",
+      time:timeAgo(new Date(item.publishedAt||Date.now())),
       category,
       hot:Math.floor(70+Math.random()*29),
-      source:extractDomain(item.link),
-      url:item.link||"#",
+      source:item.source?.name||extractDomain(item.url||""),
+      url:item.url||"#",
     }));
   }catch{return[];}
 }
