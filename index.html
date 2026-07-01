@@ -1,439 +1,389 @@
 <!DOCTYPE html>
 <html lang="el">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ClikNews.gr — Όλες οι Ειδήσεις</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
-  <style>
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{background:#08090F;font-family:'Inter',system-ui,sans-serif;color:#F1F5F9}
-    ::-webkit-scrollbar{width:8px;height:8px}
-    ::-webkit-scrollbar-track{background:#08090F}
-    ::-webkit-scrollbar-thumb{background:#3D4560;border-radius:4px}
-    ::-webkit-scrollbar-thumb:hover{background:#6B7280}
-    input::placeholder,textarea::placeholder{color:#3D4560}
-    @keyframes blink{0%,100%{opacity:1}50%{opacity:0.35}}
-    @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-    @keyframes pulse{0%,100%{opacity:0.4}50%{opacity:0.8}}
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>ClikNews.gr — Όλες οι Ειδήσεις</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#08090F;font-family:'Inter',system-ui,sans-serif;color:#F1F5F9;min-height:100vh}
+::-webkit-scrollbar{width:8px}::-webkit-scrollbar-track{background:#08090F}::-webkit-scrollbar-thumb{background:#3D4560;border-radius:4px}
+header{background:linear-gradient(180deg,#0C0E1A,#08090F);border-bottom:1px solid #1C1F2E;padding:0 20px;height:62px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.logo{display:flex;align-items:center;gap:10px}
+.logo img{height:40px;object-fit:contain}
+.tagline{font-size:10px;color:#3D4560;letter-spacing:.03em}
+.search-box{background:#ffffff07;border:1px solid #1C1F2E;border-radius:10px;padding:7px 13px;font-size:13px;color:#F1F5F9;width:150px;outline:none}
+.catbar{background:#0B0C14;border-bottom:1px solid #1C1F2E;padding:10px 20px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.cat-select{background:#08090F;border:1px solid #3B82F644;border-radius:10px;padding:8px 32px 8px 14px;font-size:13px;font-weight:700;color:#3B82F6;cursor:pointer;outline:none;appearance:none;position:relative;min-width:160px}
+.cat-wrap{position:relative}
+.cat-arrow{position:absolute;right:10px;top:50%;transform:translateY(-50%);pointer-events:none;font-size:11px;color:#3B82F6}
+.banner{flex:1;min-width:80px;height:38px;border-radius:10px;position:relative;overflow:hidden;cursor:pointer;border:1px solid rgba(255,255,255,.1);text-decoration:none;display:flex;align-items:center;justify-content:center}
+.banner-bg{position:absolute;inset:0}
+.banner-glass{position:absolute;inset:0;background:rgba(255,255,255,.07);backdrop-filter:blur(6px)}
+.banner-shine{position:absolute;top:0;left:0;right:0;height:45%;background:linear-gradient(180deg,rgba(255,255,255,.18),transparent);border-radius:10px 10px 0 0}
+.banner-text{position:relative;z-index:1;text-align:center}
+.banner-text span{display:block;font-size:11px;font-weight:900;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.4)}
+.banner-text small{font-size:9px;color:rgba(255,255,255,.65)}
+main{padding:18px 20px;max-width:860px;margin:0 auto}
+.featured{border-radius:20px;padding:28px;position:relative;overflow:hidden;margin-bottom:14px}
+.featured h2{font-size:22px;font-weight:900;color:#fff;line-height:1.25;margin:0 0 10px;cursor:pointer;letter-spacing:-.02em}
+.featured p{font-size:13px;color:rgba(241,245,249,.6);line-height:1.6;margin:0 0 18px;max-width:500px}
+.featured-meta{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.badge{font-size:10px;font-weight:900;padding:3px 10px;border-radius:4px;letter-spacing:.1em;border:1px solid}
+.cat-tag{font-size:11px;font-weight:700}
+.featured-btns{display:flex;gap:10px;flex-wrap:wrap}
+.btn-primary{font-size:13px;font-weight:800;color:#fff;border:none;border-radius:10px;padding:10px 20px;cursor:pointer}
+.btn-share{font-size:13px;font-weight:700;border-radius:10px;padding:10px 14px;cursor:pointer;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff}
+.card{background:#0F1117;border:1px solid #1C1F2E;border-radius:12px;padding:13px 16px;display:grid;grid-template-columns:1fr auto;gap:8px 12px;align-items:start;margin-bottom:8px;transition:all .18s;border-left:3px solid}
+.card:hover{background:#161820}
+.card h3{font-size:14px;font-weight:800;color:#F1F5F9;line-height:1.35;margin:0 0 4px;cursor:pointer}
+.card p{font-size:12px;color:#94A3B8;line-height:1.5;margin:0}
+.card-meta{display:flex;align-items:center;gap:6px;margin-bottom:6px;flex-wrap:wrap}
+.card-cat{font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px}
+.card-source{font-size:11px;color:#3D4560}
+.card-actions{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.btn-post{font-size:11px;font-weight:800;border-radius:7px;padding:5px 10px;cursor:pointer;border:1px solid;transition:all .15s;white-space:nowrap}
+.hotbar{display:flex;align-items:center;gap:4px}
+.hotbar-track{width:44px;height:3px;background:#1C1F2E;border-radius:2px;overflow:hidden}
+.hotbar-fill{height:100%;border-radius:2px}
+.hotbar span{font-size:10px;font-weight:700}
+footer{border-top:1px solid #1C1F2E;padding:16px;text-align:center;font-size:11px;color:#3D4560}
+/* Modal */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.9);display:flex;align-items:center;justify-content:center;z-index:200;padding:16px}
+.modal{background:#0F1117;border-radius:20px;padding:24px;max-width:520px;width:100%;max-height:90vh;overflow-y:auto}
+.modal h3{font-size:15px;font-weight:800;color:#F1F5F9;margin:6px 0 16px;line-height:1.3}
+.platform-btns{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.platform-btn{padding:6px 12px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s}
+.gen-btn{width:100%;padding:12px;border-radius:10px;border:none;color:#fff;font-size:14px;font-weight:800;cursor:pointer;margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:8px}
+.caption-area{width:100%;background:#08090F;border:1px solid #1C1F2E;border-radius:10px;padding:11px 13px;font-size:13px;line-height:1.6;font-family:inherit;resize:vertical;color:#F1F5F9}
+.modal-btns{display:flex;gap:8px;justify-content:flex-end;margin-top:12px}
+.btn-cancel{padding:9px 16px;border-radius:8px;border:1px solid #1C1F2E;background:none;cursor:pointer;font-size:13px;color:#94A3B8}
+.btn-copy{padding:9px 20px;border-radius:8px;border:none;color:#fff;cursor:pointer;font-size:13px;font-weight:800;transition:background .2s}
+/* Admin */
+.admin-inp{width:100%;background:#08090F;border:1px solid #1C1F2E;border-radius:10px;padding:9px 12px;font-size:13px;color:#F1F5F9;font-family:inherit;outline:none;margin-bottom:9px}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+</style>
 </head>
 <body>
-<div id="root"></div>
-<script type="text/babel">
-const { useState, useEffect, useCallback } = React;
 
-const C = {
-  bg:"#08090F",card:"#0F1117",cardHover:"#161820",border:"#1C1F2E",
-  cobalt:"#2563EB",neonCyan:"#06B6D4",amber:"#F59E0B",green:"#10B981",
-  breaking:"#EF4444",textPrimary:"#F1F5F9",textSecondary:"#94A3B8",textMuted:"#3D4560",
+<header>
+  <div class="logo">
+    <img src="https://raw.githubusercontent.com/radiozygoslivesalonica-maker/cliknews.gr/main/Logo%20cliknews.jpg" alt="ClikNews.gr" onerror="this.style.display='none';document.getElementById('logo-text').style.display='block'"/>
+    <span id="logo-text" style="display:none;font-size:20px;font-weight:900;background:linear-gradient(135deg,#fff,#3B82F6);-webkit-background-clip:text;-webkit-text-fill-color:transparent">ClikNews.gr</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px">
+    <input class="search-box" placeholder="🔍 Αναζήτηση…" id="searchInput" oninput="renderNews()"/>
+    <span style="font-size:10px;color:#3D4560" id="timeDisplay"></span>
+  </div>
+</header>
+
+<div class="catbar">
+  <div class="cat-wrap">
+    <select class="cat-select" id="catSelect" onchange="renderNews()">
+      <option value="all">⚡ Όλα</option>
+      <option value="breaking">🔥 Breaking</option>
+      <option value="trending">📈 Trending</option>
+      <option value="viral">😂 Viral</option>
+      <option value="lifestyle">🎯 Lifestyle</option>
+      <option value="sports">⚽ Αθλητικά</option>
+      <option value="world">🌍 Κόσμος</option>
+      <option value="nightlife">🌙 Nightlife Greece</option>
+      <option value="tourism">✈️ Τουρισμός</option>
+      <option value="music">🎵 Μουσική</option>
+      <option value="health">💪 Gym & Health</option>
+      <option value="auto">🚗 Αυτοκίνητο</option>
+      <option value="beauty">💅 Ομορφιά & Tips</option>
+    </select>
+    <span class="cat-arrow">▼</span>
+  </div>
+  <a class="banner" href="#" style="background:linear-gradient(135deg,#2563EBcc,#06B6D4cc)">
+    <div class="banner-glass"></div><div class="banner-shine"></div>
+    <div class="banner-text"><span>Διαφήμιση</span><small>Your Ad Here</small></div>
+  </a>
+  <a class="banner" href="#" style="background:linear-gradient(135deg,#7C3AEDcc,#EC4899cc)">
+    <div class="banner-glass"></div><div class="banner-shine"></div>
+    <div class="banner-text"><span>Διαφήμιση</span><small>Your Ad Here</small></div>
+  </a>
+  <a class="banner" href="#" style="background:linear-gradient(135deg,#10B981cc,#84CC16cc)">
+    <div class="banner-glass"></div><div class="banner-shine"></div>
+    <div class="banner-text"><span>Διαφήμιση</span><small>Your Ad Here</small></div>
+  </a>
+</div>
+
+<main id="mainContent"></main>
+<footer>© 2026 ClikNews.gr · Όλες οι σημαντικές Ειδήσεις σε Ελλάδα και Κόσμο</footer>
+
+<!-- Post Modal -->
+<div class="modal-bg" id="postModal" style="display:none" onclick="closeModal()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div id="modalCatTag"></div>
+    <h3 id="modalTitle"></h3>
+    <div class="platform-btns" id="platformBtns"></div>
+    <button class="gen-btn" id="genBtn" onclick="generatePost()">✦ Δημιουργία με AI</button>
+    <textarea class="caption-area" id="captionArea" rows="7"></textarea>
+    <p style="font-size:11px;color:#3D4560;margin:5px 0 0">💡 Επεξεργάσου πριν αντιγράψεις.</p>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeModal()">Κλείσιμο</button>
+      <button class="btn-copy" id="copyBtn" onclick="copyCaption()">Αντιγραφή</button>
+    </div>
+  </div>
+</div>
+
+<!-- Admin Modal -->
+<div class="modal-bg" id="adminModal" style="display:none" onclick="closeAdmin()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div id="adminContent"></div>
+  </div>
+</div>
+
+<script>
+const CATS = {
+  all:{label:"Όλα",icon:"⚡",color:"#ffffff"},
+  breaking:{label:"Breaking",icon:"🔥",color:"#EF4444"},
+  trending:{label:"Trending",icon:"📈",color:"#10B981"},
+  viral:{label:"Viral",icon:"😂",color:"#F59E0B"},
+  lifestyle:{label:"Lifestyle",icon:"🎯",color:"#EC4899"},
+  sports:{label:"Αθλητικά",icon:"⚽",color:"#F97316"},
+  world:{label:"Κόσμος",icon:"🌍",color:"#06B6D4"},
+  nightlife:{label:"Nightlife Greece",icon:"🌙",color:"#A78BFA"},
+  tourism:{label:"Τουρισμός",icon:"✈️",color:"#34D399"},
+  music:{label:"Μουσική",icon:"🎵",color:"#F472B6"},
+  health:{label:"Gym & Health",icon:"💪",color:"#4ADE80"},
+  auto:{label:"Αυτοκίνητο",icon:"🚗",color:"#60A5FA"},
+  beauty:{label:"Ομορφιά & Tips",icon:"💅",color:"#F9A8D4"},
 };
-
-const ADMIN_PASSWORD = "cliknews2026";
-
-const CATEGORIES = [
-  {id:"all",label:"Όλα",icon:"⚡",color:"#ffffff"},
-  {id:"breaking",label:"Breaking",icon:"🔥",color:"#EF4444"},
-  {id:"trending",label:"Trending",icon:"📈",color:"#10B981"},
-  {id:"viral",label:"Viral",icon:"😂",color:"#F59E0B"},
-  {id:"lifestyle",label:"Lifestyle",icon:"🎯",color:"#EC4899"},
-  {id:"sports",label:"Αθλητικά",icon:"⚽",color:"#F97316"},
-  {id:"world",label:"Κόσμος",icon:"🌍",color:"#06B6D4"},
-  {id:"nightlife",label:"Nightlife Greece",icon:"🌙",color:"#A78BFA"},
-  {id:"tourism",label:"Τουρισμός",icon:"✈️",color:"#34D399"},
-  {id:"music",label:"Μουσική",icon:"🎵",color:"#F472B6"},
-  {id:"health",label:"Gym & Health",icon:"💪",color:"#4ADE80"},
-  {id:"auto",label:"Αυτοκίνητο",icon:"🚗",color:"#60A5FA"},
-  {id:"beauty",label:"Ομορφιά & Tips",icon:"💅",color:"#F9A8D4"},
-];
-
-const MOCK_ARTICLES = [
-  {id:1,title:"Σεισμός 5.8 Ρίχτερ στην Αττική — Αισθητός σε όλη την Ελλάδα",summary:"Ισχυρός σεισμός έπληξε την Αττική. Δεν αναφέρθηκαν θύματα ή ζημιές.",time:"5 λεπτά",category:"breaking",hot:98,source:"protothema.gr",url:"https://www.protothema.gr"},
-  {id:2,title:"Καύσωνας: 44°C αύριο — Έκτακτο δελτίο ΕΜΥ για όλη την Ελλάδα",summary:"Η ΕΜΥ εξέδωσε έκτακτο δελτίο επικίνδυνων καιρικών φαινομένων. Αποφύγετε έκθεση 11:00–17:00.",time:"12 λεπτά",category:"breaking",hot:95,source:"kathimerini.gr",url:"https://www.kathimerini.gr"},
-  {id:3,title:"Έλληνας creator έσπασε ρεκόρ: 80 εκατ. views σε 48 ώρες στο TikTok",summary:"Βίντεο Έλληνα δημιουργού έγινε viral παγκοσμίως και τράβηξε διεθνή προσοχή.",time:"25 λεπτά",category:"viral",hot:99,source:"in.gr",url:"https://www.in.gr"},
-  {id:4,title:"Ολυμπιακός: Επίσημη ανακοίνωση για νέο προπονητή — Ισπανός τεχνικός",summary:"Η ΠΑΕ Ολυμπιακός ανακοίνωσε την απόκτηση έμπειρου Ισπανού τεχνικού με στόχο την Ευρώπη.",time:"40 λεπτά",category:"sports",hot:87,source:"gazzetta.gr",url:"https://www.gazzetta.gr"},
-  {id:5,title:"Taylor Swift: Νέο album «The Tortured Poets Department II» — Ρεκόρ pre-orders",summary:"18 νέα tracks, κυκλοφορία Σεπτέμβριο. Έσπασε κάθε ρεκόρ στις προ-παραγγελίες παγκοσμίως.",time:"1 ώρα",category:"trending",hot:93,source:"pes.gr",url:"https://www.pes.gr"},
-  {id:6,title:"Μύκονος: Νέοι κανόνες για τουρίστες — Τι αλλάζει φέτος το καλοκαίρι",summary:"Περιορισμοί επισκεπτών, νέες τιμές και κανόνες — τι να ξέρεις πριν ταξιδέψεις στο νησί.",time:"1 ώρα",category:"tourism",hot:82,source:"newsbeast.gr",url:"https://www.newsbeast.gr"},
-  {id:7,title:"Αθήνα Nightlife 2026: Τα 10 καλύτερα clubs του καλοκαιριού",summary:"Ο πλήρης οδηγός για τα hot spots της αθηναϊκής νύχτας — Γκάζι, Ριβιέρα και νέες αφίξεις.",time:"2 ώρες",category:"nightlife",hot:85,source:"newsbeast.gr",url:"https://www.newsbeast.gr"},
-  {id:8,title:"Spotify αλλάζει πληρωμές καλλιτεχνών — Τι σημαίνει για την ελληνική δισκογραφία",summary:"Νέο μοντέλο αποζημίωσης που επηρεάζει εκατομμύρια ανεξάρτητους καλλιτέχνες παγκοσμίως.",time:"3 ώρες",category:"music",hot:75,source:"rocking.gr",url:"https://www.rocking.gr"},
-  {id:9,title:"G7: Νέες κυρώσεις κατά Ρωσίας — Αντιδράσεις Μόσχας",summary:"Νέο πακέτο κυρώσεων από τους G7 εστιάζοντας στον ενεργειακό τομέα και τις εξαγωγές.",time:"3 ώρες",category:"world",hot:71,source:"kathimerini.gr",url:"https://www.kathimerini.gr"},
-  {id:10,title:"Το viral πρωινό που όλοι τρώνε φέτος — Η νέα τάση του ελληνικού καλοκαιριού",summary:"Τάση που σαρώνει το TikTok και έχει γίνει η νέα συνήθεια του ελληνικού καλοκαιριού.",time:"4 ώρες",category:"lifestyle",hot:88,source:"in2life.gr",url:"https://www.in2life.gr"},
-  {id:11,title:"BMW M5 vs Mercedes AMG E63: Η μεγάλη δοκιμή του 2026 στην πίστα",summary:"Συγκριτική δοκιμή των δύο κορυφαίων sport sedan — ποιο κερδίζει στην πίστα και στον δρόμο;",time:"5 ώρες",category:"auto",hot:77,source:"newsauto.gr",url:"https://www.newsauto.gr"},
-  {id:12,title:"10 beauty hacks που κάνουν viral τις Ελληνίδες στο TikTok φέτος",summary:"Από SPF routines ως μεσογειακά συστατικά — τα μυστικά ομορφιάς που όλες μοιράζονται.",time:"6 ώρες",category:"beauty",hot:83,source:"queen.gr",url:"https://www.queen.gr"},
-  {id:13,title:"5 τροφές που καίνε λίπος πιο αποτελεσματικά από τη γυμναστική",summary:"Νέα έρευνα αποκαλύπτει ποιες τροφές επιταχύνουν τον μεταβολισμό και βοηθούν στην απώλεια βάρους.",time:"7 ώρες",category:"health",hot:86,source:"vita.gr",url:"https://www.vita.gr"},
-  {id:14,title:"Grammy 2027: Beyoncé vs Kendrick — 9 υποψηφιότητες ο καθένας",summary:"Η Recording Academy ανακοίνωσε τις υποψηφιότητες. Επική σύγκρουση για το βραβείο χρονιάς.",time:"8 ώρες",category:"trending",hot:90,source:"pes.gr",url:"https://www.pes.gr"},
-  {id:15,title:"Ρεκόρ τουριστών στην Ελλάδα — 35 εκατ. αφίξεις το 2026",summary:"Η Ελλάδα έχει ήδη σπάσει το ρεκόρ αφίξεων του 2025 με μήνες μπροστά.",time:"9 ώρες",category:"tourism",hot:78,source:"newsbeast.gr",url:"https://www.newsbeast.gr"},
-];
 
 const PLATFORMS = [
   {id:"instagram",label:"Instagram",icon:"📸",tone:"visual, engaging, με emojis, max 150 λέξεις, τελειώνει με 5 hashtags"},
   {id:"facebook",label:"Facebook",icon:"👥",tone:"πληροφοριακό, φιλικό, max 80 λέξεις, 3 hashtags"},
   {id:"tiktok",label:"TikTok",icon:"🎵",tone:"πολύ σύντομο, viral, hook στην πρώτη γραμμή, max 50 λέξεις"},
-  {id:"twitter",label:"X / Twitter",icon:"𝕏",tone:"άμεσο, έντονο, max 280 χαρακτήρες, 2 hashtags"},
-  {id:"threads",label:"Threads",icon:"🧵",tone:"conversational, max 100 λέξεις, χωρίς πολλά hashtags"},
+  {id:"twitter",label:"X/Twitter",icon:"𝕏",tone:"άμεσο, έντονο, max 280 χαρακτήρες, 2 hashtags"},
+  {id:"threads",label:"Threads",icon:"🧵",tone:"conversational, max 100 λέξεις"},
 ];
 
-const BANNERS = [
-  {label:"Διαφήμιση",sub:"Your Ad Here",color1:"#2563EB",color2:"#06B6D4",url:"#"},
-  {label:"Διαφήμιση",sub:"Your Ad Here",color1:"#7C3AED",color2:"#EC4899",url:"#"},
-  {label:"Διαφήμιση",sub:"Your Ad Here",color1:"#10B981",color2:"#84CC16",url:"#"},
+let NEWS = [
+  {id:1,title:"Σεισμός 5.8 Ρίχτερ στην Αττική — Αισθητός σε όλη την Ελλάδα",summary:"Ισχυρός σεισμός έπληξε την Αττική νωρίς το πρωί. Δεν αναφέρθηκαν θύματα ή ζημιές σε κτίρια.",time:"5 λεπτά",category:"breaking",hot:98,source:"protothema.gr",url:"https://www.protothema.gr"},
+  {id:2,title:"Καύσωνας: 44°C αύριο — Έκτακτο δελτίο ΕΜΥ για όλη την Ελλάδα",summary:"Η ΕΜΥ εξέδωσε έκτακτο δελτίο επικίνδυνων καιρικών φαινομένων. Αποφύγετε έκθεση 11:00–17:00.",time:"12 λεπτά",category:"breaking",hot:95,source:"kathimerini.gr",url:"https://www.kathimerini.gr"},
+  {id:3,title:"Έλληνας creator έσπασε ρεκόρ: 80 εκατ. views σε 48 ώρες στο TikTok",summary:"Βίντεο Έλληνα δημιουργού έγινε viral παγκοσμίως και τράβηξε διεθνή προσοχή.",time:"25 λεπτά",category:"viral",hot:99,source:"in.gr",url:"https://www.in.gr"},
+  {id:4,title:"Ολυμπιακός: Επίσημη ανακοίνωση για νέο προπονητή — Ισπανός τεχνικός",summary:"Η ΠΑΕ Ολυμπιακός ανακοίνωσε την απόκτηση έμπειρου Ισπανού τεχνικού με στόχο την Ευρώπη.",time:"40 λεπτά",category:"sports",hot:87,source:"gazzetta.gr",url:"https://www.gazzetta.gr"},
+  {id:5,title:"Taylor Swift: Νέο album — Ρεκόρ pre-orders σε 24 ώρες",summary:"18 νέα tracks, κυκλοφορία Σεπτέμβριο. Έσπασε κάθε ρεκόρ στις προ-παραγγελίες παγκοσμίως.",time:"1 ώρα",category:"trending",hot:93,source:"pes.gr",url:"https://www.pes.gr"},
+  {id:6,title:"Μύκονος: Νέοι κανόνες για τουρίστες — Τι αλλάζει φέτος το καλοκαίρι",summary:"Περιορισμοί επισκεπτών, νέες τιμές και κανόνες — τι να ξέρεις πριν ταξιδέψεις.",time:"1 ώρα",category:"tourism",hot:82,source:"newsbeast.gr",url:"https://www.newsbeast.gr"},
+  {id:7,title:"Αθήνα Nightlife 2026: Τα 10 καλύτερα clubs του καλοκαιριού",summary:"Ο πλήρης οδηγός για τα hot spots της αθηναϊκής νύχτας — Γκάζι, Ριβιέρα και νέες αφίξεις.",time:"2 ώρες",category:"nightlife",hot:85,source:"newsbeast.gr",url:"https://www.newsbeast.gr"},
+  {id:8,title:"Spotify αλλάζει πληρωμές καλλιτεχνών — Τι σημαίνει για την ελληνική δισκογραφία",summary:"Νέο μοντέλο αποζημίωσης που επηρεάζει εκατομμύρια ανεξάρτητους καλλιτέχνες.",time:"3 ώρες",category:"music",hot:75,source:"rocking.gr",url:"https://www.rocking.gr"},
+  {id:9,title:"G7: Νέες κυρώσεις κατά Ρωσίας — Αντιδράσεις Μόσχας",summary:"Νέο πακέτο κυρώσεων από τους G7 εστιάζοντας στον ενεργειακό τομέα.",time:"3 ώρες",category:"world",hot:71,source:"kathimerini.gr",url:"https://www.kathimerini.gr"},
+  {id:10,title:"Το viral πρωινό που όλοι τρώνε φέτος — Η νέα τάση του ελληνικού καλοκαιριού",summary:"Τάση που σαρώνει το TikTok και έχει γίνει η νέα συνήθεια του ελληνικού καλοκαιριού.",time:"4 ώρες",category:"lifestyle",hot:88,source:"in2life.gr",url:"https://www.in2life.gr"},
+  {id:11,title:"BMW M5 vs Mercedes AMG E63: Η μεγάλη δοκιμή του 2026",summary:"Συγκριτική δοκιμή των δύο κορυφαίων sport sedan — ποιο κερδίζει στην πίστα;",time:"5 ώρες",category:"auto",hot:77,source:"newsauto.gr",url:"https://www.newsauto.gr"},
+  {id:12,title:"10 beauty hacks που κάνουν viral τις Ελληνίδες στο TikTok",summary:"Από SPF routines ως μεσογειακά συστατικά — τα μυστικά ομορφιάς που όλες μοιράζονται.",time:"6 ώρες",category:"beauty",hot:83,source:"queen.gr",url:"https://www.queen.gr"},
+  {id:13,title:"5 τροφές που καίνε λίπος πιο αποτελεσματικά από τη γυμναστική",summary:"Νέα έρευνα αποκαλύπτει ποιες τροφές επιταχύνουν τον μεταβολισμό.",time:"7 ώρες",category:"health",hot:86,source:"vita.gr",url:"https://www.vita.gr"},
+  {id:14,title:"Grammy 2027: Beyoncé vs Kendrick — 9 υποψηφιότητες ο καθένας",summary:"Η Recording Academy ανακοίνωσε τις υποψηφιότητες. Επική σύγκρουση για το βραβείο χρονιάς.",time:"8 ώρες",category:"trending",hot:90,source:"pes.gr",url:"https://www.pes.gr"},
+  {id:15,title:"Ρεκόρ τουριστών στην Ελλάδα — 35 εκατ. αφίξεις το 2026",summary:"Η Ελλάδα έχει ήδη σπάσει το ρεκόρ αφίξεων του 2025 με μήνες μπροστά.",time:"9 ώρες",category:"tourism",hot:78,source:"newsbeast.gr",url:"https://www.newsbeast.gr"},
 ];
 
-function getCat(id){return CATEGORIES.find(c=>c.id===id)||CATEGORIES[0];}
+// Load own articles from localStorage if available
+try {
+  const saved = localStorage.getItem('cliknews_own');
+  if(saved) NEWS = [...JSON.parse(saved), ...NEWS];
+} catch(e){}
 
-function timeAgo(date){
-  const d=Math.floor((Date.now()-date)/60000);
-  if(d<1)return"Μόλις τώρα";
-  if(d<60)return`${d} λεπτά`;
-  if(d<1440)return`${Math.floor(d/60)} ώρες`;
-  return`${Math.floor(d/1440)} μέρες`;
+let currentItem = null;
+let currentPlatform = "instagram";
+let logoClicks = [];
+const ADMIN_PASS = "cliknews2026";
+
+function getCat(id){ return CATS[id] || CATS.all; }
+
+function hotMeter(val, color){
+  return `<div class="hotbar"><div class="hotbar-track"><div class="hotbar-fill" style="width:${val}%;background:${color};box-shadow:0 0 6px ${color}"></div></div><span style="color:${color}">${val}</span></div>`;
 }
 
-function extractDomain(url){
-  try{return new URL(url).hostname.replace("www.","");}catch{return"";}
-}
+function renderNews(){
+  const cat = document.getElementById('catSelect').value;
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  let items = NEWS.filter(i => {
+    const matchCat = cat === 'all' || i.category === cat;
+    const matchSearch = !search || i.title.toLowerCase().includes(search);
+    return matchCat && matchSearch;
+  }).sort((a,b) => (b.hot||0)-(a.hot||0));
 
-async function fetchRSS(category){
-  // Επιστρέφει mock ειδήσεις φιλτραρισμένες ανά κατηγορία
-  await new Promise(r=>setTimeout(r,500)); // μικρή καθυστέρηση για ρεαλισμό
-  if(category==="all") return MOCK_ARTICLES;
-  return MOCK_ARTICLES.filter(a=>a.category===category);
-}
+  const main = document.getElementById('mainContent');
+  if(!items.length){ main.innerHTML='<div style="text-align:center;color:#3D4560;padding:80px 0;font-size:14px">Δεν βρέθηκαν ειδήσεις.</div>'; return; }
 
-async function generateCaption(item,platform){
-  const p=PLATFORMS.find(x=>x.id===platform);
-  const cat=getCat(item.category);
-  const res=await fetch("https://api.anthropic.com/v1/messages",{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({
-      model:"claude-sonnet-4-6",max_tokens:1000,
-      messages:[{role:"user",content:`Είσαι social media manager με 3 εκατομμύρια followers στην Ελλάδα.\nΓράψε ένα post για ${p.label}.\nΎφος: ${p.tone}.\nΓράψε ΜΟΝΟ το κείμενο, στα Ελληνικά.\nΚατηγορία: ${cat.icon} ${cat.label}\nΤίτλος: ${item.title}\nΠερίληψη: ${item.summary}`}],
-    }),
-  });
-  const data=await res.json();
-  return data.content?.[0]?.text||"Σφάλμα.";
-}
+  const featured = items[0];
+  const rest = items.slice(1);
+  const fc = getCat(featured.category);
+  const gradients = {breaking:"linear-gradient(135deg,#1a0000,#7f1d1d 60%,#08090F)",trending:"linear-gradient(135deg,#052e16,#14532d 60%,#08090F)",viral:"linear-gradient(135deg,#1c1203,#78350f 60%,#08090F)",lifestyle:"linear-gradient(135deg,#2d0a1f,#831843 60%,#08090F)",sports:"linear-gradient(135deg,#1a0a00,#7c2d12 60%,#08090F)",world:"linear-gradient(135deg,#042f2e,#134e4a 60%,#08090F)",nightlife:"linear-gradient(135deg,#1e1040,#3b0764 60%,#08090F)",tourism:"linear-gradient(135deg,#042f2e,#065f46 60%,#08090F)",music:"linear-gradient(135deg,#2d0a1f,#9d174d 60%,#08090F)",health:"linear-gradient(135deg,#052e16,#166534 60%,#08090F)",auto:"linear-gradient(135deg,#0a1628,#1e3a5f 60%,#08090F)",beauty:"linear-gradient(135deg,#2d0a1f,#9d174d 60%,#08090F)"};
 
-function HotMeter({value,color}){
-  return(
-    <div style={{display:"flex",alignItems:"center",gap:5}}>
-      <div style={{width:44,height:3,background:"#1C1F2E",borderRadius:2,overflow:"hidden"}}>
-        <div style={{width:`${value}%`,height:"100%",background:color,borderRadius:2,boxShadow:`0 0 6px ${color}`}}/>
-      </div>
-      <span style={{fontSize:10,fontWeight:700,color,letterSpacing:"0.04em"}}>{value}</span>
+  let html = `<div class="featured" style="background:${gradients[featured.category]||gradients.breaking};border:1px solid ${fc.color}33;box-shadow:0 0 60px ${fc.color}15">
+    <div style="position:absolute;top:-60px;right:-60px;width:220px;height:220px;border-radius:50%;background:${fc.color};opacity:.07;filter:blur(60px);pointer-events:none"></div>
+    <div class="featured-meta">
+      <span class="badge" style="color:${fc.color};border-color:${fc.color};background:${fc.color}15">★ TOP STORY</span>
+      <span class="cat-tag" style="color:${fc.color}">${fc.icon} ${fc.label}</span>
+      ${hotMeter(featured.hot, fc.color)}
+      <span style="font-size:11px;color:rgba(241,245,249,.35);margin-left:auto">${featured.source} · ${featured.time}</span>
     </div>
-  );
-}
-
-function ShareMenu({item,color,onClose}){
-  const txt=encodeURIComponent(`${item.title} — ${item.url}`);
-  const links=[
-    {label:"Facebook",icon:"👥",url:`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(item.url)}`},
-    {label:"X/Twitter",icon:"𝕏",url:`https://twitter.com/intent/tweet?text=${txt}`},
-    {label:"WhatsApp",icon:"💬",url:`https://wa.me/?text=${txt}`},
-    {label:"Copy link",icon:"🔗",url:null},
-  ];
-  return(
-    <div style={{position:"absolute",right:0,bottom:"110%",background:"#0F1117",border:`1px solid ${color}44`,borderRadius:10,padding:8,zIndex:99,minWidth:150,boxShadow:"0 -8px 32px rgba(0,0,0,0.5)"}}>
-      {links.map(l=>(
-        <div key={l.label} onClick={()=>{if(l.url)window.open(l.url,"_blank");else navigator.clipboard.writeText(item.url);onClose();}}
-          style={{padding:"7px 12px",fontSize:12,fontWeight:600,color:"#F1F5F9",cursor:"pointer",borderRadius:7,display:"flex",alignItems:"center",gap:8}}
-          onMouseEnter={e=>e.currentTarget.style.background=color+"22"}
-          onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
-          {l.icon} {l.label}
-        </div>
-      ))}
+    <h2 onclick="window.open('${featured.url}','_blank')">${featured.title}</h2>
+    <p>${featured.summary}</p>
+    <div class="featured-btns">
+      <button class="btn-primary" style="background:linear-gradient(135deg,${fc.color}dd,${fc.color}88);box-shadow:0 4px 20px ${fc.color}44" onclick="openModal(${featured.id})">✦ Δημιουργία Social Post</button>
+      <button class="btn-share" onclick="shareItem('${featured.url}','${featured.title.replace(/'/g,"\\'")}')">↗ Μοιράσου</button>
+      <a href="${featured.url}" target="_blank" style="font-size:12px;color:rgba(255,255,255,.4);text-decoration:none;align-self:center">Πηγή →</a>
     </div>
-  );
-}
+  </div>`;
 
-function FeaturedCard({item,onConvert}){
-  const cat=getCat(item.category);
-  const [showShare,setShowShare]=useState(false);
-  const gradients={
-    breaking:"linear-gradient(135deg,#1a0000 0%,#7f1d1d 60%,#08090F 100%)",
-    trending:"linear-gradient(135deg,#052e16 0%,#14532d 60%,#08090F 100%)",
-    viral:"linear-gradient(135deg,#1c1203 0%,#78350f 60%,#08090F 100%)",
-    lifestyle:"linear-gradient(135deg,#2d0a1f 0%,#831843 60%,#08090F 100%)",
-    sports:"linear-gradient(135deg,#1a0a00 0%,#7c2d12 60%,#08090F 100%)",
-    world:"linear-gradient(135deg,#042f2e 0%,#134e4a 60%,#08090F 100%)",
-    nightlife:"linear-gradient(135deg,#1e1040 0%,#3b0764 60%,#08090F 100%)",
-    tourism:"linear-gradient(135deg,#042f2e 0%,#065f46 60%,#08090F 100%)",
-    music:"linear-gradient(135deg,#2d0a1f 0%,#9d174d 60%,#08090F 100%)",
-    health:"linear-gradient(135deg,#052e16 0%,#166534 60%,#08090F 100%)",
-    auto:"linear-gradient(135deg,#0a1628 0%,#1e3a5f 60%,#08090F 100%)",
-    beauty:"linear-gradient(135deg,#2d0a1f 0%,#9d174d 60%,#08090F 100%)",
-  };
-  return(
-    <div style={{background:gradients[item.category]||gradients.breaking,borderRadius:20,border:`1px solid ${cat.color}33`,padding:"32px 28px",position:"relative",overflow:"hidden",boxShadow:`0 0 80px ${cat.color}15`,marginBottom:14}}>
-      <div style={{position:"absolute",top:-80,right:-80,width:280,height:280,borderRadius:"50%",background:cat.color,opacity:0.07,filter:"blur(80px)",pointerEvents:"none"}}/>
-      <div style={{position:"absolute",right:16,bottom:-16,fontSize:130,opacity:0.05,pointerEvents:"none",userSelect:"none",lineHeight:1}}>{cat.icon}</div>
-      <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:16,flexWrap:"wrap"}}>
-        <span style={{fontSize:10,fontWeight:900,color:cat.color,border:`1px solid ${cat.color}`,padding:"3px 10px",borderRadius:4,background:`${cat.color}15`,letterSpacing:"0.1em"}}>★ TOP STORY</span>
-        <span style={{fontSize:11,fontWeight:700,color:cat.color}}>{cat.icon} {cat.label}</span>
-        <HotMeter value={item.hot} color={cat.color}/>
-        <span style={{fontSize:11,color:"rgba(241,245,249,0.35)",marginLeft:"auto"}}>{item.source} · {item.time}</span>
-      </div>
-      <h2 onClick={()=>item.url&&item.url!=="#"&&window.open(item.url,"_blank")} style={{margin:"0 0 12px",fontSize:26,fontWeight:900,color:"#fff",lineHeight:1.25,maxWidth:560,letterSpacing:"-0.02em",cursor:"pointer"}}>{item.title}</h2>
-      <p style={{margin:"0 0 22px",fontSize:14,color:"rgba(241,245,249,0.6)",lineHeight:1.65,maxWidth:500}}>{item.summary}</p>
-      <div style={{display:"flex",gap:10,alignItems:"center",position:"relative",flexWrap:"wrap"}}>
-        <button onClick={()=>onConvert(item)} style={{fontSize:13,fontWeight:800,color:"#fff",background:`linear-gradient(135deg,${cat.color}dd,${cat.color}99)`,border:"none",borderRadius:10,padding:"11px 22px",cursor:"pointer",boxShadow:`0 4px 24px ${cat.color}44`}}>✦ Δημιουργία Social Post</button>
-        <div style={{position:"relative"}}>
-          <button onClick={()=>setShowShare(s=>!s)} style={{fontSize:13,fontWeight:700,color:cat.color,background:`${cat.color}18`,border:`1px solid ${cat.color}44`,borderRadius:10,padding:"11px 16px",cursor:"pointer"}}>↗ Μοιράσου</button>
-          {showShare&&<ShareMenu item={item} color={cat.color} onClose={()=>setShowShare(false)}/>}
-        </div>
-        {item.url&&item.url!=="#"&&<a href={item.url} target="_blank" rel="noreferrer" style={{fontSize:12,color:"rgba(255,255,255,0.4)",textDecoration:"none"}}>Πηγή →</a>}
-      </div>
-    </div>
-  );
-}
-
-function NewsCard({item,onConvert}){
-  const [hovered,setHovered]=useState(false);
-  const [showShare,setShowShare]=useState(false);
-  const cat=getCat(item.category);
-  return(
-    <div onMouseEnter={()=>setHovered(true)} onMouseLeave={()=>setHovered(false)}
-      style={{background:hovered?C.cardHover:C.card,border:`1px solid ${hovered?cat.color+"44":C.border}`,borderLeft:`3px solid ${item.own?C.amber:cat.color}`,borderRadius:12,padding:"14px 18px",display:"grid",gridTemplateColumns:"1fr auto",gap:"8px 14px",alignItems:"start",transition:"all 0.18s",marginBottom:8}}>
+  rest.forEach(item => {
+    const c = getCat(item.category);
+    html += `<div class="card" style="border-left-color:${item.own?'#F59E0B':c.color}" onmouseenter="this.style.borderColor='${c.color}44'" onmouseleave="this.style.borderColor='#1C1F2E'">
       <div>
-        <div style={{display:"flex",alignItems:"center",gap:7,marginBottom:7,flexWrap:"wrap"}}>
-          <span style={{fontSize:11,fontWeight:800,color:cat.color,background:`${cat.color}15`,padding:"2px 8px",borderRadius:20}}>{cat.icon} {cat.label}</span>
-          {item.own&&<span style={{fontSize:10,fontWeight:700,color:C.amber,border:`1px solid ${C.amber}44`,padding:"2px 7px",borderRadius:20}}>✍ ClikNews</span>}
-          <span style={{fontSize:11,color:C.textMuted}}>{item.source} · {item.time}</span>
+        <div class="card-meta">
+          <span class="card-cat" style="color:${c.color};background:${c.color}15">${c.icon} ${c.label}</span>
+          ${item.own?'<span style="font-size:10px;font-weight:700;color:#F59E0B;border:1px solid #F59E0B44;padding:2px 7px;border-radius:20px">✍ ClikNews</span>':''}
+          <span class="card-source">${item.source} · ${item.time}</span>
         </div>
-        <h3 onClick={()=>item.url&&item.url!=="#"&&window.open(item.url,"_blank")} style={{margin:"0 0 5px",fontSize:14,fontWeight:800,color:C.textPrimary,lineHeight:1.35,cursor:"pointer"}}>{item.title}</h3>
-        <p style={{margin:0,fontSize:12,color:C.textSecondary,lineHeight:1.55}}>{item.summary}</p>
+        <h3 onclick="window.open('${item.url}','_blank')">${item.title}</h3>
+        <p>${item.summary}</p>
       </div>
-      <div style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:6,paddingTop:2}}>
-        <HotMeter value={item.hot} color={cat.color}/>
-        <button onClick={()=>onConvert(item)} style={{fontSize:11,fontWeight:800,whiteSpace:"nowrap",color:hovered?"#fff":cat.color,background:hovered?cat.color:`${cat.color}15`,border:`1px solid ${cat.color}44`,borderRadius:7,padding:"5px 10px",cursor:"pointer",transition:"all 0.15s"}}>✦ Post</button>
-        <div style={{position:"relative"}}>
-          <button onClick={()=>setShowShare(s=>!s)} style={{fontSize:11,fontWeight:700,color:C.textMuted,background:"none",border:`1px solid ${C.border}`,borderRadius:7,padding:"5px 10px",cursor:"pointer"}}>↗</button>
-          {showShare&&<ShareMenu item={item} color={cat.color} onClose={()=>setShowShare(false)}/>}
-        </div>
+      <div class="card-actions">
+        ${hotMeter(item.hot, c.color)}
+        <button class="btn-post" style="color:${c.color};border-color:${c.color}44;background:${c.color}15" onclick="openModal(${item.id})">✦ Post</button>
+        <button class="btn-post" style="color:#94A3B8;border-color:#1C1F2E;background:none" onclick="shareItem('${item.url}','${item.title.replace(/'/g,"\\'")}')">↗</button>
       </div>
-    </div>
-  );
+    </div>`;
+  });
+
+  main.innerHTML = html;
 }
 
-function PostModal({item,onClose,onPosted}){
-  const cat=getCat(item.category);
-  const [platform,setPlatform]=useState("instagram");
-  const [caption,setCaption]=useState(`${cat.icon} ${item.title}\n\n${item.summary}`);
-  const [loading,setLoading]=useState(false);
-  const [copied,setCopied]=useState(false);
-  const generate=async()=>{
-    setLoading(true);
-    try{setCaption(await generateCaption(item,platform));onPosted();}
-    catch{setCaption("Σφάλμα. Δοκίμασε ξανά.");}
-    setLoading(false);
+function openModal(id){
+  currentItem = NEWS.find(i=>i.id===id);
+  if(!currentItem) return;
+  const c = getCat(currentItem.category);
+  document.getElementById('modalCatTag').innerHTML = `<span style="font-size:12px;font-weight:800;color:${c.color}">${c.icon} ${c.label}</span>`;
+  document.getElementById('modalTitle').textContent = currentItem.title;
+  document.getElementById('captionArea').value = `${c.icon} ${currentItem.title}\n\n${currentItem.summary}`;
+  document.getElementById('copyBtn').style.background = c.color;
+
+  let btnHtml = '';
+  PLATFORMS.forEach(p => {
+    const active = p.id === currentPlatform;
+    btnHtml += `<button class="platform-btn" style="background:${active?c.color:'#ffffff08'};color:${active?'#fff':'#94A3B8'};border:1px solid ${active?c.color:'#1C1F2E'}" onclick="setPlatform('${p.id}')">${p.icon} ${p.label}</button>`;
+  });
+  document.getElementById('platformBtns').innerHTML = btnHtml;
+  document.getElementById('genBtn').style.background = `linear-gradient(135deg,${c.color},#7C3AED)`;
+  document.getElementById('postModal').style.display = 'flex';
+}
+
+function setPlatform(id){
+  currentPlatform = id;
+  if(currentItem) openModal(currentItem.id);
+}
+
+function closeModal(){ document.getElementById('postModal').style.display='none'; }
+
+async function generatePost(){
+  if(!currentItem) return;
+  const p = PLATFORMS.find(x=>x.id===currentPlatform);
+  const c = getCat(currentItem.category);
+  const btn = document.getElementById('genBtn');
+  btn.innerHTML = '<span style="animation:spin 1s linear infinite;display:inline-block">⟳</span> Δημιουργία…';
+  btn.disabled = true;
+  try{
+    const res = await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({model:"claude-sonnet-4-6",max_tokens:1000,messages:[{role:"user",content:`Είσαι social media manager με 3 εκατομμύρια followers στην Ελλάδα.\nΓράψε ένα post για ${p.label}.\nΎφος: ${p.tone}.\nΓράψε ΜΟΝΟ το κείμενο, στα Ελληνικά.\nΚατηγορία: ${c.icon} ${c.label}\nΤίτλος: ${currentItem.title}\nΠερίληψη: ${currentItem.summary}`}]})
+    });
+    const data = await res.json();
+    document.getElementById('captionArea').value = data.content?.[0]?.text || "Σφάλμα. Δοκίμασε ξανά.";
+  }catch{ document.getElementById('captionArea').value = "Σφάλμα σύνδεσης."; }
+  btn.innerHTML = "✦ Δημιουργία με AI";
+  btn.disabled = false;
+}
+
+function copyCaption(){
+  navigator.clipboard.writeText(document.getElementById('captionArea').value);
+  const btn = document.getElementById('copyBtn');
+  btn.textContent = "✓ Αντιγράφηκε!";
+  btn.style.background = "#10B981";
+  setTimeout(()=>{ btn.textContent="Αντιγραφή"; btn.style.background=getCat(currentItem?.category||'all').color; },2000);
+}
+
+function shareItem(url, title){
+  if(navigator.share){ navigator.share({title,url}); }
+  else{ navigator.clipboard.writeText(url); alert("Link αντιγράφηκε!"); }
+}
+
+// Admin
+function handleLogoClick(){
+  const now = Date.now();
+  logoClicks = [...logoClicks.filter(t=>now-t<1500), now];
+  if(logoClicks.length >= 3){ logoClicks=[]; showAdmin(); }
+}
+
+function showAdmin(){
+  document.getElementById('adminContent').innerHTML = `
+    <h3 style="font-size:17px;font-weight:900;color:#F1F5F9;margin:0 0 6px">🔐 Admin</h3>
+    <input type="password" class="admin-inp" id="adminPass" placeholder="Κωδικός…" onkeydown="if(event.key==='Enter')adminLogin()"/>
+    <p id="adminErr" style="color:#EF4444;font-size:12px;margin-bottom:8px"></p>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn-cancel" onclick="closeAdmin()">Ακύρωση</button>
+      <button class="btn-copy" style="background:#F59E0B" onclick="adminLogin()">Είσοδος</button>
+    </div>`;
+  document.getElementById('adminModal').style.display = 'flex';
+}
+
+function adminLogin(){
+  if(document.getElementById('adminPass').value === ADMIN_PASS){ showAdminForm(); }
+  else{ document.getElementById('adminErr').textContent = "Λάθος κωδικός!"; }
+}
+
+function showAdminForm(){
+  const cats = Object.entries(CATS).filter(([k])=>k!=='all').map(([k,v])=>`<option value="${k}">${v.icon} ${v.label}</option>`).join('');
+  document.getElementById('adminContent').innerHTML = `
+    <h3 style="font-size:17px;font-weight:900;color:#F1F5F9;margin:0 0 16px">✍️ Νέο Άρθρο</h3>
+    <input class="admin-inp" id="aTitle" placeholder="Τίτλος…"/>
+    <textarea class="admin-inp" id="aSummary" rows="3" placeholder="Περίληψη…"></textarea>
+    <input class="admin-inp" id="aUrl" placeholder="URL άρθρου…"/>
+    <select class="admin-inp" id="aCat">${cats}</select>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn-cancel" onclick="closeAdmin()">Ακύρωση</button>
+      <button class="btn-copy" style="background:linear-gradient(135deg,#F59E0B,#D97706)" onclick="saveArticle()">Δημοσίευση</button>
+    </div>`;
+}
+
+function saveArticle(){
+  const title = document.getElementById('aTitle').value.trim();
+  if(!title) return;
+  const newItem = {
+    id: Date.now(), title,
+    summary: document.getElementById('aSummary').value,
+    url: document.getElementById('aUrl').value || "#",
+    category: document.getElementById('aCat').value,
+    time: "Μόλις τώρα", own: true, hot: 75, source: "ClikNews"
   };
-  const copy=()=>{navigator.clipboard.writeText(caption);setCopied(true);setTimeout(()=>setCopied(false),2000);};
-  return(
-    <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.9)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:200,padding:16}} onClick={onClose}>
-      <div style={{background:"#0F1117",border:`1px solid ${cat.color}44`,borderRadius:20,padding:26,maxWidth:540,width:"100%"}} onClick={e=>e.stopPropagation()}>
-        <span style={{fontSize:12,fontWeight:800,color:cat.color}}>{cat.icon} {cat.label}</span>
-        <h3 style={{margin:"6px 0 18px",fontSize:15,fontWeight:800,color:C.textPrimary,lineHeight:1.3}}>{item.title}</h3>
-        <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:16}}>
-          {PLATFORMS.map(p=><button key={p.id} onClick={()=>setPlatform(p.id)} style={{padding:"6px 12px",borderRadius:8,fontSize:12,fontWeight:700,cursor:"pointer",background:platform===p.id?cat.color:"#ffffff08",color:platform===p.id?"#fff":C.textSecondary,border:`1px solid ${platform===p.id?cat.color:C.border}`}}>{p.icon} {p.label}</button>)}
-        </div>
-        <button onClick={generate} disabled={loading} style={{width:"100%",padding:12,borderRadius:10,border:"none",background:loading?C.border:`linear-gradient(135deg,${cat.color},#7C3AED)`,color:"#fff",fontSize:14,fontWeight:800,cursor:loading?"default":"pointer",marginBottom:12,display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
-          {loading?<><span style={{animation:"spin 1s linear infinite",display:"inline-block"}}>⟳</span> Δημιουργία…</>:"✦ Δημιουργία με AI"}
-        </button>
-        <textarea value={caption} onChange={e=>setCaption(e.target.value)} rows={7} style={{width:"100%",boxSizing:"border-box",background:"#08090F",border:`1px solid ${C.border}`,borderRadius:10,padding:"11px 13px",fontSize:13,lineHeight:1.6,fontFamily:"inherit",resize:"vertical",color:C.textPrimary}}/>
-        <div style={{display:"flex",gap:8,justifyContent:"flex-end",marginTop:12}}>
-          <button onClick={onClose} style={{padding:"9px 18px",borderRadius:8,border:`1px solid ${C.border}`,background:"none",cursor:"pointer",fontSize:13,color:C.textMuted}}>Κλείσιμο</button>
-          <button onClick={copy} style={{padding:"9px 22px",borderRadius:8,border:"none",background:copied?C.green:cat.color,color:"#fff",cursor:"pointer",fontSize:13,fontWeight:800}}>{copied?"✓ Αντιγράφηκε!":"Αντιγραφή"}</button>
-        </div>
-      </div>
-    </div>
-  );
+  NEWS.unshift(newItem);
+  try{
+    const own = NEWS.filter(i=>i.own);
+    localStorage.setItem('cliknews_own', JSON.stringify(own));
+  }catch(e){}
+  closeAdmin();
+  renderNews();
 }
 
-function AdminModal({onSave,onClose}){
-  const [pass,setPass]=useState("");const [auth,setAuth]=useState(false);
-  const [title,setTitle]=useState("");const [summary,setSummary]=useState("");
-  const [category,setCategory]=useState("music");const [url,setUrl]=useState("");
-  const [scheduleDate,setScheduleDate]=useState("");const [error,setError]=useState("");
-  const login=()=>{if(pass===ADMIN_PASSWORD)setAuth(true);else setError("Λάθος κωδικός!");};
-  const save=()=>{if(!title.trim())return;onSave({title,summary,category,url:url||"#",scheduleDate});};
-  const inp={width:"100%",boxSizing:"border-box",background:"#08090F",border:`1px solid ${C.border}`,borderRadius:10,padding:"10px 13px",fontSize:13,color:C.textPrimary,fontFamily:"inherit",outline:"none",marginBottom:10};
-  return(
-    <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.9)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:200,padding:16}} onClick={onClose}>
-      <div style={{background:"#0F1117",border:`1px solid ${C.amber}33`,borderRadius:20,padding:26,maxWidth:500,width:"100%"}} onClick={e=>e.stopPropagation()}>
-        {!auth?(
-          <>
-            <h3 style={{margin:"0 0 16px",fontSize:17,fontWeight:900,color:C.textPrimary}}>🔐 Admin</h3>
-            <input type="password" placeholder="Κωδικός…" value={pass} onChange={e=>setPass(e.target.value)} onKeyDown={e=>e.key==="Enter"&&login()} style={inp}/>
-            {error&&<p style={{margin:"0 0 10px",fontSize:12,color:C.breaking}}>{error}</p>}
-            <div style={{display:"flex",gap:8,justifyContent:"flex-end"}}>
-              <button onClick={onClose} style={{padding:"9px 18px",borderRadius:8,border:`1px solid ${C.border}`,background:"none",cursor:"pointer",fontSize:13,color:C.textMuted}}>Ακύρωση</button>
-              <button onClick={login} style={{padding:"9px 20px",borderRadius:8,border:"none",background:C.amber,color:"#fff",cursor:"pointer",fontSize:13,fontWeight:800}}>Είσοδος</button>
-            </div>
-          </>
-        ):(
-          <>
-            <h3 style={{margin:"0 0 18px",fontSize:17,fontWeight:900,color:C.textPrimary}}>✍️ Νέο Άρθρο</h3>
-            <input placeholder="Τίτλος…" value={title} onChange={e=>setTitle(e.target.value)} style={inp}/>
-            <textarea placeholder="Περίληψη…" value={summary} onChange={e=>setSummary(e.target.value)} rows={3} style={{...inp,resize:"vertical"}}/>
-            <input placeholder="URL…" value={url} onChange={e=>setUrl(e.target.value)} style={inp}/>
-            <select value={category} onChange={e=>setCategory(e.target.value)} style={{...inp,appearance:"none"}}>
-              {CATEGORIES.filter(c=>c.id!=="all").map(c=><option key={c.id} value={c.id}>{c.icon} {c.label}</option>)}
-            </select>
-            <input type="datetime-local" value={scheduleDate} onChange={e=>setScheduleDate(e.target.value)} style={inp}/>
-            <div style={{display:"flex",gap:8,justifyContent:"flex-end"}}>
-              <button onClick={onClose} style={{padding:"9px 18px",borderRadius:8,border:`1px solid ${C.border}`,background:"none",cursor:"pointer",fontSize:13,color:C.textMuted}}>Ακύρωση</button>
-              <button onClick={save} style={{padding:"9px 20px",borderRadius:8,border:"none",background:`linear-gradient(135deg,${C.amber},#D97706)`,color:"#fff",cursor:"pointer",fontSize:13,fontWeight:800}}>{scheduleDate?"⏰ Προγραμματισμός":"Δημοσίευση"}</button>
-            </div>
-          </>
-        )}
-      </div>
-    </div>
-  );
+function closeAdmin(){ document.getElementById('adminModal').style.display='none'; }
+
+// Time display
+function updateTime(){
+  document.getElementById('timeDisplay').textContent = new Date().toLocaleTimeString('el-GR',{hour:'2-digit',minute:'2-digit'});
 }
 
-function LoadingSkeleton(){
-  return(
-    <div>
-      {[1,2,3,4,5].map(i=>(
-        <div key={i} style={{background:C.card,border:`1px solid ${C.border}`,borderRadius:12,padding:"14px 18px",marginBottom:8,opacity:0.6}}>
-          <div style={{width:"30%",height:12,background:C.border,borderRadius:6,marginBottom:10,animation:"pulse 1.5s infinite"}}/>
-          <div style={{width:"85%",height:16,background:C.border,borderRadius:6,marginBottom:8,animation:"pulse 1.5s infinite"}}/>
-          <div style={{width:"60%",height:12,background:C.border,borderRadius:6,animation:"pulse 1.5s infinite"}}/>
-        </div>
-      ))}
-    </div>
-  );
-}
+// Logo click handler
+document.querySelector('.logo').addEventListener('click', handleLogoClick);
+document.querySelector('.logo').style.cursor = 'pointer';
 
-function App(){
-  const [activeCat,setActiveCat]=useState("all");
-  const [search,setSearch]=useState("");
-  const [convertItem,setConvertItem]=useState(null);
-  const [showAdmin,setShowAdmin]=useState(false);
-  const [ownArticles,setOwnArticles]=useState([]);
-  const [rssArticles,setRssArticles]=useState([]);
-  const [loading,setLoading]=useState(false);
-  const [lastRefresh,setLastRefresh]=useState(new Date());
-  const [refreshing,setRefreshing]=useState(false);
-  const [postCount,setPostCount]=useState(0);
-  const [konami,setKonami]=useState([]);
-
-  const loadNews=useCallback(async(cat)=>{
-    setLoading(true);
-    try{
-      let items=[];
-      if(cat==="all"){
-        const cats=Object.keys(RSS_FEEDS);
-        const results=await Promise.all(cats.slice(0,6).map(c=>fetchRSS(c)));
-        items=results.flat().sort(()=>Math.random()-0.5).slice(0,30);
-      }else{
-        items=await fetchRSS(cat);
-      }
-      setRssArticles(items);
-    }catch{setRssArticles([]);}
-    setLoading(false);
-  },[]);
-
-  useEffect(()=>{loadNews(activeCat);},[activeCat]);
-
-  // Αυτόματη ανανέωση κάθε 15 λεπτά
-  useEffect(()=>{
-    const t=setInterval(()=>{loadNews(activeCat);setLastRefresh(new Date());},15*60*1000);
-    return()=>clearInterval(t);
-  },[activeCat]);
-
-  const handleRefresh=()=>{
-    setRefreshing(true);
-    loadNews(activeCat).then(()=>{setLastRefresh(new Date());setRefreshing(false);});
-  };
-
-  const handleLogoClick=()=>{
-    const now=Date.now();
-    setKonami(prev=>{const next=[...prev.filter(t=>now-t<1500),now];if(next.length>=3){setShowAdmin(true);return[];}return next;});
-  };
-
-  const allItems=[...ownArticles.map(a=>({...a,own:true})),...rssArticles];
-  const filtered=allItems.filter(item=>{
-    const matchCat=activeCat==="all"||item.category===activeCat;
-    const matchSearch=!search||item.title.toLowerCase().includes(search.toLowerCase());
-    return matchCat&&matchSearch;
-  }).sort((a,b)=>(b.hot||0)-(a.hot||0));
-
-  const featuredItem=filtered[0];
-  const restItems=filtered.slice(1);
-  const breakingCount=filtered.filter(i=>i.category==="breaking").length;
-
-  const addArticle=({title,summary,category,url,scheduleDate})=>{
-    setOwnArticles(prev=>[{id:Date.now(),title,summary,category,url:url||"#",time:scheduleDate?`Προγρ. ${new Date(scheduleDate).toLocaleString("el-GR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"})}`:"Μόλις τώρα",own:true,hot:75,source:"ClikNews"},...prev]);
-    setShowAdmin(false);
-  };
-
-  return(
-    <div style={{minHeight:"100vh",background:C.bg}}>
-      {/* Header */}
-      <header style={{background:"linear-gradient(180deg,#0C0E1A 0%,#08090F 100%)",borderBottom:`1px solid ${C.border}`,padding:"0 24px",height:62,display:"flex",alignItems:"center",justifyContent:"space-between",position:"sticky",top:0,zIndex:50}}>
-        <div style={{display:"flex",flexDirection:"column",gap:2,cursor:"pointer"}} onClick={handleLogoClick}>
-          <div style={{display:"flex",alignItems:"center",gap:10}}>
-            <img src="https://raw.githubusercontent.com/radiozygoslivesalonica-maker/cliknews.gr/main/Logo%20cliknews.jpg" alt="ClikNews.gr" style={{height:44,objectFit:"contain"}}/>
-            {breakingCount>0&&<span onClick={()=>setActiveCat("breaking")} style={{fontSize:10,fontWeight:900,color:C.breaking,border:`1px solid ${C.breaking}44`,padding:"2px 8px",borderRadius:4,background:`${C.breaking}10`,animation:"blink 1.5s infinite",cursor:"pointer"}}>🔥 {breakingCount} BREAKING</span>}
-          </div>
-          <span style={{fontSize:10,color:C.textMuted,letterSpacing:"0.03em",paddingLeft:40}}>Όλες οι σημαντικές Ειδήσεις σε Ελλάδα και Κόσμο</span>
-        </div>
-        <div style={{display:"flex",alignItems:"center",gap:10}}>
-          {postCount>0&&<span style={{fontSize:11,fontWeight:700,color:C.green,background:`${C.green}15`,border:`1px solid ${C.green}33`,borderRadius:20,padding:"3px 10px"}}>✦ {postCount} posts</span>}
-          <input placeholder="🔍 Αναζήτηση…" value={search} onChange={e=>setSearch(e.target.value)} style={{background:"#ffffff07",border:`1px solid ${C.border}`,borderRadius:10,padding:"7px 13px",fontSize:13,color:C.textPrimary,width:160,outline:"none"}}/>
-          <button onClick={handleRefresh} style={{background:"none",border:`1px solid ${C.border}`,borderRadius:8,padding:"6px 10px",cursor:"pointer",fontSize:14,color:C.textMuted,display:"inline-block",transition:"transform 0.6s",transform:refreshing?"rotate(360deg)":"none"}}>↻</button>
-          <span style={{fontSize:10,color:C.textMuted}}>{lastRefresh.toLocaleTimeString("el-GR",{hour:"2-digit",minute:"2-digit"})}</span>
-        </div>
-      </header>
-
-      {/* Category + Banners */}
-      <div style={{background:"#0B0C14",borderBottom:`1px solid ${C.border}`,padding:"10px 20px",display:"flex",alignItems:"center",gap:12,flexWrap:"wrap"}}>
-        <div style={{position:"relative",width:200,flexShrink:0}}>
-          <select value={activeCat} onChange={e=>setActiveCat(e.target.value)} style={{width:"100%",background:"#08090F",border:`1px solid ${getCat(activeCat).color}55`,borderRadius:10,padding:"8px 36px 8px 14px",fontSize:13,fontWeight:700,color:getCat(activeCat).color,cursor:"pointer",outline:"none",appearance:"none",WebkitAppearance:"none"}}>
-            {CATEGORIES.map(cat=><option key={cat.id} value={cat.id} style={{color:cat.color,background:"#08090F"}}>{cat.icon} {cat.label}</option>)}
-          </select>
-          <span style={{position:"absolute",right:12,top:"50%",transform:"translateY(-50%)",pointerEvents:"none",fontSize:12,color:getCat(activeCat).color}}>▼</span>
-        </div>
-        {BANNERS.map((b,i)=>(
-          <a key={i} href={b.url} target="_blank" rel="noreferrer" style={{flex:1,minWidth:90,height:38,borderRadius:10,position:"relative",overflow:"hidden",cursor:"pointer",border:"1px solid rgba(255,255,255,0.1)",textDecoration:"none"}}>
-            <div style={{position:"absolute",inset:0,background:`linear-gradient(135deg,${b.color1}cc,${b.color2}cc)`}}/>
-            <div style={{position:"absolute",inset:0,background:"rgba(255,255,255,0.07)",backdropFilter:"blur(6px)",WebkitBackdropFilter:"blur(6px)"}}/>
-            <div style={{position:"absolute",top:0,left:0,right:0,height:"45%",background:"linear-gradient(180deg,rgba(255,255,255,0.18) 0%,transparent 100%)",borderRadius:"10px 10px 0 0"}}/>
-            <div style={{position:"relative",zIndex:1,height:"100%",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:1}}>
-              <span style={{fontSize:11,fontWeight:900,color:"#fff",letterSpacing:"0.06em",textShadow:"0 1px 4px rgba(0,0,0,0.4)"}}>{b.label}</span>
-              <span style={{fontSize:9,color:"rgba(255,255,255,0.65)"}}>{b.sub}</span>
-            </div>
-          </a>
-        ))}
-      </div>
-
-      {/* Content */}
-      <main style={{padding:"18px 20px",maxWidth:860,margin:"0 auto"}}>
-        {loading?<LoadingSkeleton/>:filtered.length===0
-          ?<div style={{textAlign:"center",color:C.textMuted,padding:"80px 0",fontSize:14}}>Δεν βρέθηκαν ειδήσεις.</div>
-          :<>
-            {featuredItem&&<FeaturedCard item={featuredItem} onConvert={setConvertItem}/>}
-            {restItems.map(item=><NewsCard key={item.id} item={item} onConvert={setConvertItem}/>)}
-          </>
-        }
-      </main>
-
-      <footer style={{borderTop:`1px solid ${C.border}`,padding:"16px 24px",textAlign:"center"}}>
-        <span style={{fontSize:11,color:C.textMuted}}>© 2026 ClikNews.gr · Όλες οι σημαντικές Ειδήσεις σε Ελλάδα και Κόσμο</span>
-      </footer>
-
-      {convertItem&&<PostModal item={convertItem} onClose={()=>setConvertItem(null)} onPosted={()=>setPostCount(n=>n+1)}/>}
-      {showAdmin&&<AdminModal onSave={addArticle} onClose={()=>setShowAdmin(false)}/>}
-    </div>
-  );
-}
-
-ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+updateTime();
+setInterval(updateTime, 60000);
+renderNews();
 </script>
 </body>
 </html>
