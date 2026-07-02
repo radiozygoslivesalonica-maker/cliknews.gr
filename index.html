@@ -383,7 +383,29 @@ document.querySelector('.logo').style.cursor = 'pointer';
 
 updateTime();
 setInterval(updateTime, 60000);
-renderNews();
+renderNews(); 
+  const RSS_FEEDS=[{url:"https://www.protothema.gr/rss/",source:"protothema.gr",category:"breaking"},{url:"https://www.kathimerini.gr/feed/",source:"kathimerini.gr",category:"world"},{url:"https://www.in.gr/feed/",source:"in.gr",category:"viral"}];
+async function fetchLiveNews(){
+  let live=[];let idc=1000;
+  for(const f of RSS_FEEDS){
+    try{
+      const r=await fetch("https://corsproxy.io/?url="+encodeURIComponent(f.url));
+      const t=await r.text();
+      const x=new DOMParser().parseFromString(t,"text/xml");
+      const items=x.querySelectorAll("item");
+      items.forEach((it,i)=>{
+        if(i>=5)return;
+        const title=it.querySelector("title")?.textContent||"";
+        const link=it.querySelector("link")?.textContent||"";
+        const desc=(it.querySelector("description")?.textContent||"").replace(/<[^>]*>/g,'').slice(0,150);
+        live.push({id:idc++,title:title,summary:desc,time:"μόλις τώρα",category:f.category,hot:80-i*5,source:f.source,url:link});
+      });
+    }catch(e){console.error("RSS error",f.url,e);}
+  }
+  if(live.length){NEWS=[...live,...NEWS];renderNews();}
+}
+fetchLiveNews();
+setInterval(fetchLiveNews,5*60*1000);
 </script>
 </body>
 </html>
