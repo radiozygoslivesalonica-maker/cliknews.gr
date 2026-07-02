@@ -384,7 +384,21 @@ document.querySelector('.logo').style.cursor = 'pointer';
 updateTime();
 setInterval(updateTime, 60000);
 renderNews(); 
-  const RSS_FEEDS=[{url:"https://www.protothema.gr/rss/",source:"protothema.gr",category:"breaking"},{url:"https://www.kathimerini.gr/feed/",source:"kathimerini.gr",category:"world"},{url:"https://www.in.gr/feed/",source:"in.gr",category:"viral"}];
+  //const RSS_FEEDS=[{url:"https://www.protothema.gr/rss/",source:"protothema.gr",category:"breaking"},{url:"https://www.kathimerini.gr/feed/",source:"kathimerini.gr",category:"world"},{url:"https://www.in.gr/feed/",source:"in.gr",category:"viral"}];
+  const RSS_FEEDS=[
+{url:"https://www.protothema.gr/rss/",source:"protothema.gr",category:"breaking"},
+{url:"https://www.newsit.gr/feed/",source:"newsit.gr",category:"trending"},
+{url:"https://www.kathimerini.gr/feed/",source:"kathimerini.gr",category:"world"},
+{url:"https://www.naftemporiki.gr/feed/",source:"naftemporiki.gr",category:"breaking"},
+{url:"https://www.tovima.gr/feed/",source:"tovima.gr",category:"world"},
+{url:"https://www.gazzetta.gr/rss.xml",source:"gazzetta.gr",category:"sports"},
+{url:"https://www.in.gr/feed/",source:"in.gr",category:"viral"},
+{url:"https://www.iefimerida.gr/rss.xml",source:"iefimerida.gr",category:"trending"},
+{url:"https://www.sport24.gr/rss",source:"sport24.gr",category:"sports"},
+{url:"https://www.car.gr/blog/feed/",source:"car.gr",category:"auto"},
+{url:"https://www.vita.gr/feed/",source:"vita.gr",category:"health"},
+{url:"https://www.queen.gr/feed",source:"queen.gr",category:"beauty"}
+];
 async function fetchLiveNews(){
   let live=[];let idc=1000;
   for(const f of RSS_FEEDS){
