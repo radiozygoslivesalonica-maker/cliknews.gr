@@ -389,7 +389,8 @@ async function fetchLiveNews(){
   let live=[];let idc=1000;
   for(const f of RSS_FEEDS){
     try{
-      const r=await fetch("https://corsproxy.io/?url="+encodeURIComponent(f.url));
+     //const r=await fetch("https://corsproxy.io/?url="+encodeURIComponent(f.url));
+      const r=await fetch("https://api.allorigins.win/raw?url="+encodeURIComponent(f.url));
       const t=await r.text();
       const x=new DOMParser().parseFromString(t,"text/xml");
       const items=x.querySelectorAll("item");
